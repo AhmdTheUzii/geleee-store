@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WRC Exhaust Ordering Service by Geleee Store</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Font: Dash Horizon (replace with actual font if available) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico"><!-- Tambahkan favicon.ico di folder ini untuk menghilangkan error 404 favicon di browser -->
+  <link rel="preload" href="Dashhorizon-eZ5wg.otf" as="font" type="font/otf" crossorigin>
+  <style>
+    @font-face {
+      font-family: 'Dash Horizon';
+      src: local('Dash Horizon'), url('Dashhorizon-eZ5wg.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-logo">WRC Exhaust</div>
+    <button class="navbar-login-btn" id="loginBtn">Login</button>
+  </nav>
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Welcome to the <span>WRC Exhaust Ordering Service</span> by Geleee Store</h1>
+      <p class="hero-subtitle">Order your racing exhausts with ease, speed, and reliability.</p>
+      <button class="cta-btn" id="orderNowBtn">Order Now</button>
+    </div>
+    <div class="hero-illustration">
+      <!-- Optional: SVG or icon illustration -->
+      <img src="racing-car.svg" alt="Motorcycle" />
+    </div>
+  </section>
+  <section class="features">
+    <div class="feature" data-animate>
+      <div class="feature-icon">🏁</div>
+      <h3>Fast Ordering</h3>
+      <p>Quick and seamless ordering process for all your racing needs.</p>
+    </div>
+    <div class="feature" data-animate>
+      <div class="feature-icon">🔒</div>
+      <h3>Secure Payment</h3>
+      <p>All transactions are encrypted and safe.</p>
+    </div>
+    <div class="feature" data-animate>
+      <div class="feature-icon">🚚</div>
+      <h3>Worldwide Shipping</h3>
+      <p>We deliver to your doorstep, wherever you are.</p>
+    </div>
+  </section>
+  <footer class="footer">
+    <div style="max-width:1200px;margin:0 auto;padding:1.5rem 1rem 1rem 1rem;text-align:center;">
+      <div style="font-size:1.1rem;margin-bottom:0.5rem;">&copy; 2025 Geleee Store. All rights reserved.</div>
+      <div style="color:#00eaff;font-size:1rem;margin-bottom:0.5rem;">
+        Contact:
+        <a href="mailto:info@geleee.store" style="color:#00eaff;text-decoration:underline;" aria-label="Email ke info@geleee.store">info@geleee.store</a>
+        |
+        <a href="https://www.instagram.com/geleee_store?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener" style="color:#00eaff;text-decoration:underline;margin-left:0.5rem;" aria-label="Instagram Geleee Store">Instagram: @geleee_store</a>
+        |
+        <a href="https://wa.me/6282114002303" target="_blank" rel="noopener" style="color:#00eaff;text-decoration:underline;margin-left:0.5rem;" aria-label="WhatsApp Geleee Store">WhatsApp: +62 821-1400-2303</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <span class="close" id="closeLogin">&times;</span>
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <p class="modal-switch">Don't have an account? <a href="#" id="toRegister">Register</a></p>
+    </div>
+  </div>
+  <!-- Register Modal -->
+  <div class="modal" id="registerModal">
+    <div class="modal-content">
+      <span class="close" id="closeRegister">&times;</span>
+      <h2>Register</h2>
+      <form id="registerForm">
+        <input type="text" id="registerName" placeholder="Full Name" required>
+        <input type="email" id="registerEmail" placeholder="Email" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <button type="submit">Register</button>
+      </form>
+      <p class="modal-switch">Already have an account? <a href="#" id="toLogin">Login</a></p>
+    </div>
+  </div>
+  <!-- Notification Alert -->
+  <div id="notification" class="notification" style="display:none;"></div>
+  <!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<!-- Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<!-- Firebase Firestore (jika perlu) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+  // Konfigurasi Firebase (dari web app baru)
+  const firebaseConfig = {
+    apiKey: "AIzaSyC6j81FLNvbvUdksxikpIFEGeX8B4TGCDA",
+    authDomain: "geleee-store.firebaseapp.com",
+    databaseURL: "https://geleee-store-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "geleee-store",
+    storageBucket: "geleee-store.appspot.com", // HARUS .appspot.com
+    messagingSenderId: "310128144220",
+    appId: "1:310128144220:web:dd9fa14dddf092f7f29b99",
+    measurementId: "G-9LRG6B9GDV"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+<script src="script.js"></script>
+
+  <script>
+    // --- LOGOUT LOGIC --- (hapus logika lama, diganti dengan Firebase Auth)
+    // --- AUTH & MODAL LOGIC ---
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const closeLogin = document.getElementById('closeLogin');
+    const closeRegister = document.getElementById('closeRegister');
+    const toRegister = document.getElementById('toRegister');
+    const toLogin = document.getElementById('toLogin');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const notification = document.getElementById('notification');
+
+    // Show/hide modal
+    loginBtn.onclick = () => { loginModal.classList.add('show'); };
+    closeLogin.onclick = () => { loginModal.classList.remove('show'); };
+    toRegister.onclick = (e) => { e.preventDefault(); loginModal.classList.remove('show'); registerModal.classList.add('show'); };
+    closeRegister.onclick = () => { registerModal.classList.remove('show'); };
+    toLogin.onclick = (e) => { e.preventDefault(); registerModal.classList.remove('show'); loginModal.classList.add('show'); };
+    window.onclick = (e) => {
+      if (e.target === loginModal) loginModal.classList.remove('show');
+      if (e.target === registerModal) registerModal.classList.remove('show');
+    };
+
+    // Notifikasi
+    function showNotif(msg, type = 'success') {
+      notification.textContent = msg;
+      notification.className = 'notification notification-' + type;
+      notification.style.display = 'flex';
+      setTimeout(() => notification.classList.add('show'), 10);
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.style.display = 'none', 400);
+      }, 2500);
+    }
+
+    // Register
+    registerForm.onsubmit = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        await cred.user.updateProfile({ displayName: name });
+        showNotif('Registrasi berhasil! Silakan login.', 'success');
+        registerModal.classList.remove('show');
+        loginModal.classList.add('show');
+        registerForm.reset();
+      } catch (err) {
+        showNotif(err.message, 'error');
+      }
+    };
+
+    // Login
+    loginForm.onsubmit = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        showNotif('Login berhasil!', 'success');
+        loginForm.reset();
+        window.location.href = 'shop.html';
+      } catch (err) {
+        showNotif('Login gagal: ' + err.message, 'error');
+      }
+    };
+  </script>
+</body>
+</html> 

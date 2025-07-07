@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Halaman Tidak Ditemukan | Geleee Store</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: #10131a;
+      color: #f3f4f6;
+      font-family: 'Inter', 'Poppins', 'Raleway', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .notfound-container {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      max-width: 420px;
+      background: #181c25;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
+      margin: 2rem auto;
+      animation: fadeInUp 0.7s;
+    }
+    .notfound-title {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #00eaff;
+      margin-bottom: 0.5rem;
+      letter-spacing: 2px;
+      font-family: 'Dash Horizon', 'Poppins', 'Raleway', sans-serif;
+    }
+    .notfound-desc {
+      font-size: 1.3rem;
+      color: #b0b8c1;
+      margin-bottom: 2rem;
+    }
+    .notfound-btn {
+      background: linear-gradient(90deg, #00eaff 0%, #0072ff 100%);
+      color: #10131a;
+      border: none;
+      border-radius: 30px;
+      padding: 0.9rem 2.2rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      box-shadow: 0 4px 24px 0 rgba(0,114,255,0.12);
+    }
+    .notfound-btn:hover {
+      background: linear-gradient(90deg, #0072ff 0%, #00eaff 100%);
+      color: #fff;
+      transform: translateY(-2px) scale(1.04);
+    }
+    @media (max-width: 600px) {
+      .notfound-title { font-size: 2.2rem; }
+      .notfound-container { padding: 2rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="notfound-container">
+    <div class="notfound-title">404</div>
+    <div class="notfound-desc">Oops! Halaman yang kamu cari tidak ditemukan.<br>Cek kembali URL atau kembali ke halaman utama.</div>
+    <a href="shop.html" class="notfound-btn">Kembali ke Shop</a>
+  </div>
+</body>
+</html> 

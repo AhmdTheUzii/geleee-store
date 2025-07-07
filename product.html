@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Produk - Geleee Store</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<!-- Firebase Auth -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<!-- Firebase Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+  // Konfigurasi Firebase (dari console Firebase-mu)
+  const firebaseConfig = {
+    apiKey: "AIzaSyC6j81FLNvbvUdksxikpIFEGeX8B4TGCDA",
+    authDomain: "geleee-store.firebaseapp.com",
+    projectId: "geleee-store",
+    storageBucket: "geleee-store.appspot.com",
+    messagingSenderId: "310128144220",
+    appId: "1:310128144220:web:ec5f7fdc7ad7ef03f29b99",
+    measurementId: "G-8S4B7LLQQ5"
+  };
+
+  // Inisialisasi Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+  <style>
+    body {
+      background: #10131a;
+      color: #f3f4f6;
+      font-family: 'Inter', 'Poppins', 'Raleway', Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .detail-main {
+      max-width: 1100px;
+      margin: 3.5rem auto 2rem auto;
+      background: #181c25;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
+      padding: 2.5rem 2rem 2rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .gallery {
+      flex: 1 1 340px;
+      min-width: 280px;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+    }
+    .gallery-main {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: #23273a;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      cursor: zoom-in;
+      border: 1.5px solid #23273a;
+    }
+    .gallery-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 14px;
+      transition: transform 0.2s;
+      background: #23273a;
+    }
+    .gallery-thumbs {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+    .gallery-thumb {
+      width: 54px;
+      height: 54px;
+      background: #23273a;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #23273a;
+      cursor: pointer;
+      transition: border 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-thumb.selected {
+      border: 2px solid #00eaff;
+    }
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .detail-info {
+      flex: 2 1 400px;
+      min-width: 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .detail-title {
+      font-family: 'Dash Horizon', 'Poppins', 'Raleway', sans-serif;
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+    .detail-rating {
+      font-size: 1.2rem;
+      color: #FFD600;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .detail-rating .review-count {
+      color: #b0b8c1;
+      font-size: 1rem;
+      margin-left: 0.5rem;
+    }
+    .detail-stock {
+      color: #00eaff;
+      font-size: 1.08rem;
+      font-weight: 600;
+    }
+    .detail-stock .habis {
+      color: #ff4d4f;
+      font-weight: 700;
+    }
+    .detail-price {
+      color: #00eaff;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .detail-desc {
+      color: #b0b8c1;
+      font-size: 1.08rem;
+      margin-bottom: 1.2rem;
+    }
+    .detail-actions {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 1.2rem;
+    }
+    .buy-btn, .cart-btn {
+      background: linear-gradient(90deg, #00eaff 0%, #0072ff 100%);
+      color: #10131a;
+      border: none;
+      border-radius: 30px;
+      padding: 0.9rem 2.2rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .buy-btn:hover, .cart-btn:hover {
+      background: linear-gradient(90deg, #0072ff 0%, #00eaff 100%);
+      color: #fff;
+    }
+    .buy-btn[disabled], .cart-btn[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      color: #00eaff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: #fff; }
+
+    /* Styling untuk bagian komentar */
+    .comments-section {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: #181c25;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18);
+      padding: 2rem;
+    }
+    .comments-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .comments-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .filter-section {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-select {
+      background: #23273a;
+      color: #f3f4f6;
+      border: 1px solid #3a3f4a;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .filter-select:hover {
+      border-color: #00eaff;
+    }
+    .filter-select:focus {
+      outline: none;
+      border-color: #00eaff;
+    }
+    .sort-btn {
+      background: #23273a;
+      color: #f3f4f6;
+      border: 1px solid #3a3f4a;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sort-btn:hover {
+      background: #00eaff;
+      color: #10131a;
+    }
+    .comment-item {
+      background: #23273a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #3a3f4a;
+      transition: border-color 0.2s;
+    }
+    .comment-item:hover {
+      border-color: #00eaff;
+    }
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+    .comment-user {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #00eaff, #0072ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10131a;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .username {
+      font-weight: 600;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+    .comment-date {
+      color: #b0b8c1;
+      font-size: 0.8rem;
+    }
+    .comment-rating {
+      color: #FFD600;
+      font-size: 1rem;
+    }
+    .comment-text {
+      color: #e5e7eb;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .comment-images {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .comment-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .comment-image:hover {
+      transform: scale(1.05);
+    }
+    .comment-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .comment-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .like-btn {
+      background: none;
+      border: none;
+      color: #b0b8c1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .like-btn:hover {
+      color: #00eaff;
+    }
+    .like-btn.liked {
+      color: #ff4d4f;
+    }
+    .helpful-tag {
+      background: #00eaff;
+      color: #10131a;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .verified-purchase {
+      background: #10b981;
+      color: #fff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .no-comments {
+      text-align: center;
+      padding: 3rem;
+      color: #b0b8c1;
+      font-size: 1.1rem;
+    }
+    @media (max-width: 900px) {
+      .detail-main { flex-direction: column; gap: 2rem; padding: 1.2rem 0.5rem 1rem 0.5rem; }
+      .gallery { max-width: 100vw; }
+      .detail-title { font-size: 1.3rem; }
+      .detail-price { font-size: 1.3rem; }
+      .comments-section { margin: 2rem 0.5rem; padding: 1.5rem; }
+      .comments-header { flex-direction: column; align-items: flex-start; }
+      .filter-section { width: 100%; }
+    }
+    @media (max-width: 600px) {
+      .detail-main { margin: 1.2rem 0.2rem; padding: 0.7rem 0.2rem; }
+      .comments-section { margin: 1.2rem 0.2rem; padding: 1rem; }
+      .filter-section { flex-direction: column; align-items: stretch; }
+      .filter-select, .sort-btn { width: 100%; }
+    }
+    @keyframes pulse {0%{opacity:0.6;}100%{opacity:1;}} .comment-skeleton{background:#23273a;border-radius:12px;padding:1.5rem;margin-bottom:1rem;border:1px solid #3a3f4a;animation:pulse 1.2s infinite alternate;} .comment-skeleton-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:0.8rem;} .comment-skeleton-avatar{width:40px;height:40px;background:linear-gradient(135deg,#23273a,#181c25);border-radius:50%;} .comment-skeleton-lines{flex:1;} .comment-skeleton-line{height:1em;background:#23273a;border-radius:6px;margin-bottom:0.5em;width:80%;animation:pulse 1.2s infinite alternate;} .comment-skeleton-rating{height:1em;width:60px;background:#23273a;border-radius:6px;margin-bottom:0.5em;animation:pulse 1.2s infinite alternate;} .comment-skeleton-text{height:2.2em;width:90%;background:#23273a;border-radius:8px;margin-bottom:0.7em;animation:pulse 1.2s infinite alternate;}
+    .add-comment-section { margin-bottom: 2.5rem; }
+    .comment-form .form-group { margin-bottom: 1.2rem; }
+    .comment-form textarea.form-input, .comment-form input.form-input {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .comment-form .form-actions { margin-top: 1.5rem; }
+    .image-preview-grid { margin-top: 0.7rem; }
+  </style>
+</head>
+<body>
+  <a href="#detailMain" class="skip-link" style="position:absolute;left:-999px;top:0;background:#00eaff;color:#10131a;padding:0.7rem 1.5rem;z-index:3001;border-radius:0 0 12px 12px;font-weight:700;transition:left 0.2s;">Skip to main content</a>
+  <main class="detail-main" id="detailMain" style="display:none;"></main>
+  
+  <!-- Section untuk menambah komentar, diletakkan di atas penilaian produk -->
+  <section class="add-comment-section" id="addCommentSection" style="margin-bottom:2.5rem;">
+    <h3 class="add-comment-title">✍️ Tulis Review Anda</h3>
+    <div id="commentFormContainer"></div>
+  </section>
+
+  <section class="comments-section" id="commentsSection" style="display:none;">
+    <div class="comments-header">
+      <h2 class="comments-title">Penilaian Produk</h2>
+      <div class="filter-section">
+        <select class="filter-select" id="ratingFilter">
+          <option value="all">Semua Rating</option>
+          <option value="5">5 Bintang</option>
+          <option value="4">4 Bintang</option>
+          <option value="3">3 Bintang</option>
+          <option value="2">2 Bintang</option>
+          <option value="1">1 Bintang</option>
+        </select>
+        <select class="filter-select" id="typeFilter">
+          <option value="all">Semua Review</option>
+          <option value="with-images">Dengan Foto</option>
+          <option value="verified">Pembelian Terverifikasi</option>
+        </select>
+        <button class="sort-btn" id="sortBtn">Terbaru</button>
+      </div>
+    </div>
+    <div id="commentsList"></div>
+  </section>
+
+  <button id="scrollToTopBtn" aria-label="Kembali ke atas" style="display:none;position:fixed;right:2rem;bottom:2.5rem;z-index:2003;background:linear-gradient(90deg,#00eaff,#0072ff);color:#10131a;border:none;border-radius:50%;width:48px;height:48px;box-shadow:0 4px 24px 0 rgba(0,114,255,0.18);font-size:2rem;cursor:pointer;align-items:center;justify-content:center;transition:opacity 0.3s,visibility 0.3s;"><span style="display:inline-block;transform:translateY(2px);">&#8679;</span></button>
+
+  <div id="toast" class="notification" role="status" aria-live="polite" style="display:none;position:fixed;top:2.5rem;left:50%;transform:translateX(-50%);z-index:3000;"></div>
+
+  <script>
+    // Data produk (gallery, stok, deskripsi, rating, reviewCount)
+    const products = [
+      {
+        id: 1,
+        name: 'Knalpot Akrapovic Carbon',
+        price: 1200000,
+        brand: 'Akrapovic',
+        gallery: [
+          'images/Knalpot-Akrapovic-Carbon.jpeg',
+          'images/Knalpot-Akrapovic-Carbon.jpeg',
+          'images/Knalpot-Akrapovic-Carbon.jpeg'
+        ],
+        rating: 5,
+        reviewCount: 12,
+        stock: 7,
+        desc: 'Knalpot racing premium dengan material carbon, suara nendang dan bobot ringan. Cocok untuk performa maksimal dan tampilan motor lebih sporty.'
+      },
+      {
+        id: 2,
+        name: 'Knalpot Yoshimura GP',
+        price: 950000,
+        brand: 'Yoshimura',
+        gallery: [
+          'images/Knalpot-Yoshimura.jpeg',
+          'images/Knalpot-Yoshimura.jpeg'
+        ],
+        rating: 4,
+        reviewCount: 8,
+        stock: 3,
+        desc: 'Knalpot legendaris dari Yoshimura, suara khas dan desain sporty. Banyak dipakai di ajang balap dunia.'
+      },
+      {
+        id: 3,
+        name: 'Knalpot Racing R9',
+        price: 1350000,
+        brand: 'Racing',
+        gallery: [
+          'images/Knalpot-Racing-R9.jpg'
+        ],
+        rating: 4,
+        reviewCount: 5,
+        stock: 0,
+        desc: 'Pilihan favorit untuk motor harian dan balap, suara garang dan harga terjangkau.'
+      },
+      {
+        id: 4,
+        name: 'Knalpot Proliner SS',
+        price: 1100000,
+        brand: 'Proliner',
+        gallery: [
+          'images/Knalpot-Proliner-SS.jpg'
+        ],
+        rating: 3,
+        reviewCount: 2,
+        stock: 2,
+        desc: 'Knalpot stainless steel, awet dan tahan panas, suara bulat dan responsif.'
+      },
+      {
+        id: 5,
+        name: 'Knalpot Nob1 GTR',
+        price: 1050000,
+        brand: 'Nob1',
+        gallery: [
+          'images/Knalpot-Nob1-GTR.jpg'
+        ],
+        rating: 3,
+        reviewCount: 1,
+        stock: 5,
+        desc: 'Knalpot lokal berkualitas, suara ngebas dan desain kekinian.'
+      },
+      {
+        id: 6,
+        name: 'Knalpot SCMS Venom',
+        price: 900000,
+        brand: 'SCMS',
+        gallery: [
+          'images/Knalpot-SCMS-Venom.webp'
+        ],
+        rating: 2,
+        reviewCount: 0,
+        stock: 10,
+        desc: 'Knalpot ekonomis dengan suara sporty, cocok untuk modifikasi harian.'
+      },
+    ];
+
+    // Gantikan array comments dengan data dari Firestore
+    let comments = [];
+
+    // Fungsi untuk fetch komentar dari Firestore untuk produk tertentu
+    async function fetchCommentsFromFirestore(productId) {
+      const snapshot = await db.collection('comments').where('productId', '==', productId).get();
+      comments = snapshot.docs.map(doc => doc.data());
+    }
+
+    function formatRupiah(num) {
+      return 'Rp ' + num.toLocaleString('id-ID');
+    }
+
+    function generateStars(rating) {
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        stars += i <= rating ? '<span style="color:#FFD600;font-size:1.3rem;">&#9733;</span>' : '<span style="color:#23273a;font-size:1.3rem;">&#9733;</span>';
+      }
+      return stars;
+    }
+
+    function generateCommentStars(rating) {
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        stars += i <= rating ? '⭐' : '☆';
+      }
+      return stars;
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('id-ID', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+
+    function renderComments(filteredComments) {
+      const commentsList = document.getElementById('commentsList');
+      // Tampilkan skeleton dulu
+      commentsList.innerHTML = Array(3).fill('').map(() => `
+        <div class="comment-skeleton">
+          <div class="comment-skeleton-header">
+            <div class="comment-skeleton-avatar"></div>
+            <div class="comment-skeleton-lines">
+              <div class="comment-skeleton-line" style="width:60%;"></div>
+              <div class="comment-skeleton-line" style="width:40%;"></div>
+            </div>
+            <div class="comment-skeleton-rating"></div>
+          </div>
+          <div class="comment-skeleton-text"></div>
+        </div>
+      `).join('');
+      setTimeout(() => {
+        if (filteredComments.length === 0) {
+          commentsList.innerHTML = '<div class="no-comments">Belum ada review untuk filter ini.</div>';
+          return;
+        }
+        let commentsHTML = '';
+        const user = auth.currentUser;
+        filteredComments.forEach(comment => {
+          const userInitial = comment.username.charAt(0).toUpperCase();
+          let imagesHTML = '';
+          if (comment.images && comment.images.length > 0) {
+            imagesHTML = '<div class="comment-images">';
+            comment.images.forEach(img => {
+              imagesHTML += `<div class="comment-image"><img src="${img}" alt="Review image"></div>`;
+            });
+            imagesHTML += '</div>';
+          }
+          // Tombol edit/hapus hanya untuk komentar milik user login
+          let actionButtons = '';
+          if (user && (comment.username === (user.displayName || user.email))) {
+            actionButtons = `
+              <button class="delete-btn" onclick="deleteComment('${comment.id}')" style="background:#ff4d4f;color:#fff;border:none;border-radius:8px;padding:0.3rem 0.9rem;cursor:pointer;font-size:0.9rem;margin-right:0.5rem;">Hapus</button>
+              <button class="edit-btn" onclick="editComment('${comment.id}')" style="background:#00eaff;color:#10131a;border:none;border-radius:8px;padding:0.3rem 0.9rem;cursor:pointer;font-size:0.9rem;">Edit</button>
+            `;
+          }
+          commentsHTML += `
+            <div class="comment-item">
+              <div class="comment-header">
+                <div class="comment-user">
+                  <div class="user-avatar">${userInitial}</div>
+                  <div class="user-info">
+                    <div class="username">${comment.username}</div>
+                    <div class="comment-date">${formatDate(comment.date)}</div>
+                  </div>
+                </div>
+                <div class="comment-rating">${generateCommentStars(comment.rating)}</div>
+              </div>
+              <div class="comment-text">${comment.text}</div>
+              ${imagesHTML}
+              <div class="comment-actions">
+                <button class="like-btn ${comment.liked ? 'liked' : ''}" onclick="toggleLike(${comment.id})">
+                  ${comment.liked ? '❤️' : '🤍'} ${comment.helpful}
+                </button>
+                ${comment.verified ? '<span class="verified-purchase">✓ Pembelian Terverifikasi</span>' : ''}
+                ${comment.helpful > 10 ? '<span class="helpful-tag">Helpful</span>' : ''}
+                ${actionButtons}
+              </div>
+            </div>
+          `;
+        });
+        commentsList.innerHTML = commentsHTML;
+      }, 500);
+    }
+
+    function filterComments() {
+      const productId = parseInt(new URLSearchParams(window.location.search).get('id'));
+      const ratingFilter = document.getElementById('ratingFilter').value;
+      const typeFilter = document.getElementById('typeFilter').value;
+      
+      let filtered = comments.filter(comment => comment.productId === productId);
+      
+      if (ratingFilter !== 'all') {
+        filtered = filtered.filter(comment => comment.rating === parseInt(ratingFilter));
+      }
+      
+      if (typeFilter === 'with-images') {
+        filtered = filtered.filter(comment => comment.images && comment.images.length > 0);
+      } else if (typeFilter === 'verified') {
+        filtered = filtered.filter(comment => comment.verified);
+      }
+      
+      return filtered;
+    }
+
+    // Pastikan fungsi toggleLike global agar tidak error onclick
+    window.toggleLike = function(commentId) {
+      const comment = comments.find(c => c.id === commentId);
+      if (comment) {
+        comment.liked = !comment.liked;
+        comment.helpful += comment.liked ? 1 : -1;
+        renderComments(filterComments());
+      }
+    };
+
+    let sortOrder = 'newest';
+    function toggleSort() {
+      sortOrder = sortOrder === 'newest' ? 'oldest' : 'newest';
+      document.getElementById('sortBtn').textContent = sortOrder === 'newest' ? 'Terbaru' : 'Terlama';
+      
+      const filtered = filterComments();
+      filtered.sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+      });
+      
+      renderComments(filtered);
+    }
+
+    // Ambil id dari query string
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'));
+    const prod = products.find(p => p.id === id);
+
+    // Modifikasi renderDetail agar fetch komentar dari Firestore sebelum render
+    async function renderDetail() {
+      if (!prod) {
+        document.body.innerHTML = '<div style="color:#f3f4f6;text-align:center;margin-top:5rem;font-size:1.5rem;">Produk tidak ditemukan.<br><a href="shop.html" style="color:#00eaff;">Kembali ke Shop</a></div>';
+        return;
+      }
+
+      // Fetch komentar dari Firestore
+      await fetchCommentsFromFirestore(prod.id);
+
+      let galleryThumbs = '';
+      prod.gallery.forEach((img, idx) => {
+        galleryThumbs += `<div class="gallery-thumb${idx===0?' selected':''}" data-idx="${idx}"><img src="${img}" alt="${prod.name} gallery"></div>`;
+      });
+
+      let stars = generateStars(prod.rating);
+
+      document.getElementById('detailMain').innerHTML = `
+        <div class="gallery">
+          <div class="gallery-main" id="galleryMain"><img src="${prod.gallery[0]}" alt="${prod.name}" id="mainImg"></div>
+          <div class="gallery-thumbs" id="galleryThumbs">${galleryThumbs}</div>
+        </div>
+        <div class="detail-info">
+          <a href="shop.html" class="back-link" aria-label="Kembali ke Shop">&larr; Kembali ke Shop</a>
+          <div class="detail-title">${prod.name}</div>
+          <div class="detail-rating">${stars}<span class="review-count">(${prod.reviewCount} review)</span></div>
+          <div class="detail-stock">Stok: ${prod.stock > 0 ? prod.stock : '<span class=\'habis\'>Habis</span>'}</div>
+          <div class="detail-price">${formatRupiah(prod.price)}</div>
+          <div class="detail-desc">${prod.desc}</div>
+          <div class="detail-actions">
+            <button class="buy-btn" aria-label="Beli sekarang" ${prod.stock === 0 ? 'disabled' : ''}>Beli Sekarang</button>
+            <button class="cart-btn" id="addToCartBtn" aria-label="Tambah ke Keranjang" ${prod.stock === 0 ? 'disabled' : ''}>Tambah ke Keranjang</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('detailMain').style.display = '';
+      document.getElementById('commentsSection').style.display = '';
+
+      // Gallery logic
+      const thumbs = document.querySelectorAll('.gallery-thumb');
+      thumbs.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          thumbs.forEach(t => t.classList.remove('selected'));
+          this.classList.add('selected');
+          document.getElementById('mainImg').src = prod.gallery[+this.dataset.idx];
+        });
+      });
+
+      // Zoom logic
+      const mainImg = document.getElementById('mainImg');
+      const galleryMain = document.getElementById('galleryMain');
+      let zoomed = false;
+      galleryMain.addEventListener('click', function() {
+        zoomed = !zoomed;
+        mainImg.style.transform = zoomed ? 'scale(2.1)' : 'scale(1)';
+        mainImg.style.cursor = zoomed ? 'zoom-out' : 'zoom-in';
+      });
+
+      // Event listeners untuk filter dan sort
+      document.getElementById('ratingFilter').addEventListener('change', function() {
+        renderComments(filterComments());
+      });
+
+      document.getElementById('typeFilter').addEventListener('change', function() {
+        renderComments(filterComments());
+      });
+
+      document.getElementById('sortBtn').addEventListener('click', toggleSort);
+
+      // Render komentar pertama kali
+      renderComments(filterComments());
+
+      // Tambah ke keranjang logic
+      const addToCartBtn = document.getElementById('addToCartBtn');
+      updateCartBtnState(prod);
+      if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', function() {
+          let cart = getCart();
+          if (cart.find(item => item.id === prod.id)) {
+            showToast('Produk sudah ada di keranjang.', 'info');
+            updateCartBtnState(prod);
+            return;
+          }
+          cart.push({ id: prod.id, name: prod.name, price: prod.price, img: prod.gallery[0] });
+          setCart(cart);
+          showToast('Produk ditambahkan ke keranjang!', 'success');
+          updateCartBtnState(prod);
+        });
+      }
+    }
+
+    // Tambahkan toast notification reusable jika belum ada
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'notification notification-' + type;
+      toast.style.display = 'flex';
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.style.display = 'none', 400);
+      }, 2000);
+    }
+    // Cart logic with localStorage
+    function getCart() {
+      try {
+        return JSON.parse(localStorage.getItem('geleee_cart') || '[]');
+      } catch { return []; }
+    }
+    function setCart(cart) {
+      localStorage.setItem('geleee_cart', JSON.stringify(cart));
+    }
+    function updateCartBtnState(prod) {
+      const btn = document.getElementById('addToCartBtn');
+      const cart = getCart();
+      if (!btn) return;
+      if (cart.find(item => item.id === prod.id)) {
+        btn.disabled = true;
+        btn.textContent = 'Sudah di Keranjang';
+        btn.style.opacity = 0.7;
+        btn.style.cursor = 'not-allowed';
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Tambah ke Keranjang';
+        btn.style.opacity = 1;
+        btn.style.cursor = 'pointer';
+      }
+    }
+
+    // Scroll to top button logic
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 300) {
+        scrollToTopBtn.style.display = 'flex';
+        scrollToTopBtn.style.opacity = 1;
+        scrollToTopBtn.style.visibility = 'visible';
+      } else {
+        scrollToTopBtn.style.opacity = 0;
+        scrollToTopBtn.style.visibility = 'hidden';
+        setTimeout(() => { if (window.scrollY <= 300) scrollToTopBtn.style.display = 'none'; }, 300);
+      }
+    });
+    scrollToTopBtn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Modal esc close
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        // Tutup modal jika ada
+        const modal = document.querySelector('.modal.show');
+        if (modal) modal.classList.remove('show');
+      }
+    });
+
+    // State management
+    let currentRating = 0;
+    let selectedImages = [];
+    let currentUser = null;
+    function getCurrentUser() {
+      // Simulasi user sudah login
+      return {
+        uid: 'user123',
+        displayName: 'John Doe',
+        email: 'john@example.com'
+      };
+    }
+    function renderCommentForm() {
+      const container = document.getElementById('commentFormContainer');
+      currentUser = getCurrentUser();
+      if (!currentUser) {
+        container.innerHTML = `
+          <div class="login-prompt">
+            <h4 class="login-prompt-title">Masuk untuk Menulis Review</h4>
+            <p>Anda harus masuk terlebih dahulu untuk dapat menulis review produk.</p>
+            <a href="login.html" class="login-btn">Masuk Sekarang</a>
+          </div>
+        `;
+        return;
+      }
+      container.innerHTML = `
+        <form class="comment-form" id="commentForm">
+          <div class="form-group">
+            <label class="rating-label">Berikan Rating *</label>
+            <div class="rating-stars" id="ratingStars">
+              ${Array.from({length: 5}, (_, i) => 
+                `<span class="rating-star" data-rating="${i + 1}">★</span>`
+              ).join('')}
+              <span class="rating-text" id="ratingText">Pilih rating</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="commentText">Tulis Review Anda *</label>
+            <textarea 
+              class="form-input" 
+              id="commentText" 
+              placeholder="Ceritakan pengalaman Anda dengan produk ini..."
+              maxlength="500"
+              required
+            ></textarea>
+            <div class="character-count" id="characterCount">0/500</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tambahkan Foto (Opsional)</label>
+            <div class="image-upload-area" id="imageUploadArea">
+              <div class="upload-icon">📷</div>
+              <div class="upload-text">Klik untuk upload foto atau drag & drop</div>
+              <div class="upload-subtext">Maksimal 5 foto, ukuran max 2MB per foto</div>
+            </div>
+            <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+            <div class="image-preview-grid" id="imagePreviewGrid"></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" id="cancelBtn">Batal</button>
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>Kirim Review</button>
+          </div>
+        </form>
+      `;
+      initializeFormEvents();
+    }
+    function initializeFormEvents() {
+      const stars = document.querySelectorAll('.rating-star');
+      const ratingText = document.getElementById('ratingText');
+      const ratingTexts = ['Sangat Buruk', 'Buruk', 'Biasa', 'Bagus', 'Sangat Bagus'];
+      stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+          currentRating = index + 1;
+          updateStars();
+          ratingText.textContent = ratingTexts[index];
+          validateForm();
+        });
+        star.addEventListener('mouseenter', () => {
+          stars.forEach((s, i) => {
+            s.classList.toggle('active', i <= index);
+          });
+        });
+      });
+      document.getElementById('ratingStars').addEventListener('mouseleave', updateStars);
+      const commentText = document.getElementById('commentText');
+      const characterCount = document.getElementById('characterCount');
+      commentText.addEventListener('input', () => {
+        const length = commentText.value.length;
+        characterCount.textContent = `${length}/500`;
+        characterCount.classList.remove('near-limit', 'at-limit');
+        if (length > 450) characterCount.classList.add('at-limit');
+        else if (length > 400) characterCount.classList.add('near-limit');
+        validateForm();
+      });
+      const imageUploadArea = document.getElementById('imageUploadArea');
+      const imageInput = document.getElementById('imageInput');
+      imageUploadArea.addEventListener('click', () => imageInput.click());
+      imageInput.addEventListener('change', handleImageSelect);
+      imageUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        imageUploadArea.classList.add('dragover');
+      });
+      imageUploadArea.addEventListener('dragleave', () => {
+        imageUploadArea.classList.remove('dragover');
+      });
+      imageUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        imageUploadArea.classList.remove('dragover');
+        const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+        handleImageFiles(files);
+      });
+      document.getElementById('commentForm').addEventListener('submit', handleSubmit);
+      document.getElementById('cancelBtn').addEventListener('click', resetForm);
+      // Initial validation
+      validateForm();
+    }
+    function updateStars() {
+      const stars = document.querySelectorAll('.rating-star');
+      stars.forEach((star, index) => {
+        star.classList.toggle('active', index < currentRating);
+      });
+    }
+    function handleImageSelect(e) {
+      const files = Array.from(e.target.files);
+      handleImageFiles(files);
+    }
+    function handleImageFiles(files) {
+      if (selectedImages.length + files.length > 5) {
+        showToast('Maksimal 5 foto yang bisa diupload', 'error');
+        return;
+      }
+      files.forEach(file => {
+        if (file.size > 2 * 1024 * 1024) {
+          showToast(`File ${file.name} terlalu besar (max 2MB)`, 'error');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageData = {
+            file: file,
+            url: e.target.result,
+            id: Date.now() + Math.random()
+          };
+          selectedImages.push(imageData);
+          updateImagePreview();
+        };
+        reader.readAsDataURL(file);
+      });
+      updateImagePreview();
+    }
+    function updateImagePreview() {
+      const previewGrid = document.getElementById('imagePreviewGrid');
+      previewGrid.innerHTML = selectedImages.map(img => `
+        <div class="image-preview-item">
+          <img src="${img.url}" alt="Preview">
+          <button type="button" class="image-remove-btn" onclick="removeImage('${img.id}')">×</button>
+        </div>
+      `).join('');
+    }
+    window.removeImage = function(imageId) {
+      selectedImages = selectedImages.filter(img => img.id !== imageId);
+      updateImagePreview();
+      validateForm();
+    };
+    function validateForm() {
+      const commentText = document.getElementById('commentText');
+      const submitBtn = document.getElementById('submitBtn');
+      const isValid = currentRating > 0 && commentText.value.trim().length > 0;
+      submitBtn.disabled = !isValid;
+    }
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      const commentText = document.getElementById('commentText').value.trim();
+      if (!currentRating || !commentText) {
+        showToast('Mohon lengkapi rating dan komentar', 'error');
+        return;
+      }
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Mengirim...';
+      try {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        const newComment = {
+          id: Date.now(),
+          productId: getCurrentProductId(),
+          username: (auth.currentUser && (auth.currentUser.displayName || auth.currentUser.email)) || 'User',
+          rating: currentRating,
+          date: new Date().toISOString().split('T')[0],
+          text: commentText,
+          images: selectedImages.map(img => img.url),
+          verified: true,
+          helpful: 0,
+          liked: false
+        };
+        // Simpan komentar ke Firestore
+        await db.collection('comments').doc(String(newComment.id)).set(newComment);
+        // Fetch ulang komentar dari Firestore dan render
+        await fetchCommentsFromFirestore(newComment.productId);
+        renderComments(filterComments());
+        showSuccessMessage();
+        resetForm();
+        if (typeof refreshComments === 'function') {
+          refreshComments();
+        }
+      } catch (error) {
+        console.error('Error submitting comment:', error);
+        showToast('Gagal mengirim review. Silakan coba lagi.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Kirim Review';
+      }
+    }
+    function showSuccessMessage() {
+      const container = document.getElementById('commentFormContainer');
+      container.innerHTML = `
+        <div class="success-message">
+          ✅ Review berhasil dikirim! Terima kasih atas feedback Anda.
+        </div>
+        <button type="button" class="submit-btn" onclick="renderCommentForm()">Tulis Review Lagi</button>
+      `;
+    }
+    function resetForm() {
+      currentRating = 0;
+      selectedImages = [];
+      renderCommentForm();
+    }
+    function getCurrentProductId() {
+      const params = new URLSearchParams(window.location.search);
+      return parseInt(params.get('id')) || 1;
+    }
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        max-width: 300px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      `;
+      if (type === 'success') {
+        toast.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+      } else {
+        toast.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+      }
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.style.transform = 'translateX(0)', 10);
+      setTimeout(() => toast.style.transform = 'translateX(100%)', 3000);
+      setTimeout(() => document.body.removeChild(toast), 3300);
+    }
+    renderCommentForm();
+
+    renderDetail();
+
+    // Fungsi migrasi dummy comments ke Firestore (panggil manual dari console atau satu kali di awal)
+    async function migrateDummyCommentsToFirestore(productId) {
+      // Ambil komentar dummy untuk produk tertentu
+      const dummy = comments.filter(c => c.productId === productId);
+      for (const c of dummy) {
+        // Cek apakah sudah ada di Firestore (berdasarkan id)
+        const docRef = db.collection('comments').doc(String(c.id));
+        const doc = await docRef.get();
+        if (!doc.exists) {
+          await docRef.set(c);
+          console.log('Migrated comment id:', c.id);
+        }
+      }
+      alert('Migrasi dummy comments ke Firestore selesai!');
+    }
+    // Cara pakai: buka console, jalankan migrateDummyCommentsToFirestore(ID_PRODUK)
+    // Contoh: migrateDummyCommentsToFirestore(1)
+
+    // Fungsi hapus komentar
+    window.deleteComment = async function(commentId) {
+      if (!confirm('Yakin ingin menghapus komentar ini?')) return;
+      try {
+        await db.collection('comments').doc(String(commentId)).delete();
+        // Fetch ulang dan render
+        await fetchCommentsFromFirestore(getCurrentProductId());
+        renderComments(filterComments());
+        showToast('Komentar berhasil dihapus', 'success');
+      } catch (err) {
+        showToast('Gagal menghapus komentar', 'error');
+      }
+    }
+    // Fungsi editComment akan diimplementasikan selanjutnya
+    window.editComment = async function(commentId) {
+      // Cari komentar yang akan diedit
+      const comment = comments.find(c => String(c.id) === String(commentId));
+      if (!comment) return showToast('Komentar tidak ditemukan', 'error');
+      // Prompt untuk edit komentar (text dan rating)
+      const newText = prompt('Edit komentar Anda:', comment.text);
+      if (newText === null) return; // batal
+      let newRating = prompt('Edit rating (1-5):', comment.rating);
+      if (newRating === null) return;
+      newRating = parseInt(newRating);
+      if (isNaN(newRating) || newRating < 1 || newRating > 5) {
+        showToast('Rating harus 1-5', 'error');
+        return;
+      }
+      try {
+        // Update di Firestore
+        await db.collection('comments').doc(String(commentId)).update({
+          text: newText,
+          rating: newRating
+        });
+        // Fetch ulang dan render
+        await fetchCommentsFromFirestore(getCurrentProductId());
+        renderComments(filterComments());
+        showToast('Komentar berhasil diedit', 'success');
+      } catch (err) {
+        showToast('Gagal mengedit komentar', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

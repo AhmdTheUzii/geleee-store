@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop - Geleee Store</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="Dashhorizon-eZ5wg.otf" as="font" type="font/otf" crossorigin>
+  <style>
+    @font-face {
+      font-family: 'Dash Horizon';
+      src: local('Dash Horizon'), url('Dashhorizon-eZ5wg.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    body {
+      background: linear-gradient(135deg, #10131a 60%, #0072ff 100%);
+      color: #f3f4f6;
+      font-family: 'Inter', 'Poppins', 'Raleway', Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .shop-header {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      left: 0;
+      background: rgba(16, 19, 26, 0.98);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2.5rem;
+      z-index: 1001;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+    }
+    .shop-logo {
+      font-family: 'Dash Horizon', 'Poppins', 'Raleway', sans-serif;
+      font-size: 2rem;
+      color: #00eaff;
+      letter-spacing: 2px;
+      font-weight: bold;
+      margin-right: 2rem;
+    }
+    .shop-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .cart-btn {
+      background: #181c25;
+      color: #00eaff;
+      border: none;
+      border-radius: 30px;
+      padding: 0.5rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 8px 0 rgba(0,114,255,0.08);
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .cart-btn:hover {
+      background: #00eaff;
+      color: #10131a;
+      box-shadow: 0 4px 16px 0 rgba(0,114,255,0.18);
+    }
+    #cartCount {
+      background: #00eaff;
+      color: #10131a;
+      border-radius: 50%;
+      padding: 0.1rem 0.7rem;
+      font-size: 0.95rem;
+      font-weight: bold;
+      margin-left: 0.2rem;
+    }
+    .shop-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1rem 2rem 1rem;
+    }
+    .shop-search-filter {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      background: #181c25;
+      border-radius: 14px;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08);
+    }
+    .input-group {
+      display: flex;
+      align-items: stretch;
+      border: 1.5px solid #23273a;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #23273a;
+      width: 100%;
+      max-width: 350px;
+    }
+    .input-group input {
+      border: none;
+      outline: none;
+      padding: 0.8rem 1.2rem;
+      font-size: 1.08rem;
+      background: transparent;
+      color: #fff;
+      width: 100%;
+    }
+    .input-group button {
+      background: linear-gradient(90deg, #00eaff 0%, #0072ff 100%);
+      color: #10131a;
+      border: none;
+      padding: 0 1.2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      border-left: 1.5px solid #23273a;
+      transition: background 0.2s, color 0.2s;
+    }
+    .input-group button:hover {
+      background: linear-gradient(90deg, #0072ff 0%, #00eaff 100%);
+      color: #fff;
+    }
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: flex-end;
+      margin-top: 1rem;
+    }
+    .filter-row select {
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1.5px solid #23273a;
+      background: #23273a;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+    .filter-row select:focus {
+      border: 1.5px solid #00eaff;
+      background: #2a2f3a;
+    }
+    .filter-row button {
+      background: #23273a;
+      color: #b0b8c1;
+      border: 1.5px solid #23273a;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: auto;
+    }
+    .filter-row button:hover {
+      background: #2a2f3a;
+      border-color: #00eaff;
+      color: #00eaff;
+    }
+    .results-info {
+      margin-bottom: 1.5rem;
+      padding: 0.5rem 0;
+    }
+    #resultsCount {
+      color: #b0b8c1;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .shop-products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2.2rem;
+      animation: fadeIn 1s;
+    }
+    .shop-product-card {
+      background: #181c25;
+      border-radius: 18px;
+      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.10);
+      padding: 1.5rem 1rem 1.2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.18s, box-shadow 0.18s;
+      opacity: 1;
+      min-height: 340px;
+      position: relative;
+    }
+    .shop-product-card:hover {
+      box-shadow: 0 8px 32px 0 rgba(0,114,255,0.18);
+      transform: translateY(-4px) scale(1.03);
+    }
+    .shop-product-img {
+      width: 120px;
+      height: 120px;
+      background: #23273a;
+      border-radius: 14px;
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: #00eaff;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+      overflow: hidden;
+    }
+    .shop-product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
+    .shop-product-name {
+      font-size: 1.13rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      min-height: 2.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .shop-product-price {
+      color: #00eaff;
+      font-size: 1.08rem;
+      font-weight: 600;
+      margin-bottom: 1.1rem;
+    }
+    .add-cart-btn {
+      background: linear-gradient(90deg, #00eaff 0%, #0072ff 100%);
+      color: #10131a;
+      border: none;
+      border-radius: 30px;
+      padding: 0.7rem 1.7rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      margin-top: auto;
+    }
+    .add-cart-btn:hover {
+      background: linear-gradient(90deg, #0072ff 0%, #00eaff 100%);
+      color: #fff;
+      transform: translateY(-2px) scale(1.04);
+    }
+    /* Cart Sidebar */
+    .cart-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 370px;
+      max-width: 95vw;
+      height: 100vh;
+      background: #181c25;
+      box-shadow: -4px 0 32px 0 rgba(0,0,0,0.18);
+      z-index: 2002;
+      animation: slideInRight 0.4s;
+    }
+    .cart-modal.show {
+      display: block;
+      animation: slideInRight 0.4s;
+    }
+    .cart-modal-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+    }
+    .cart-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.2rem;
+      border-bottom: 1px solid #23273a;
+      padding-bottom: 0.7rem;
+    }
+    .cart-modal-header h2 {
+      color: #00eaff;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .close-cart {
+      font-size: 1.7rem;
+      color: #b0b8c1;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .close-cart:hover {
+      color: #00eaff;
+    }
+    .cart-items {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      margin-bottom: 1.2rem;
+      padding-right: 0.2rem;
+    }
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #23273a;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 0.8rem;
+      gap: 0.7rem;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,0.08);
+    }
+    .cart-item-info {
+      flex: 1 1 auto;
+    }
+    .cart-item-name {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .cart-item-price {
+      color: #00eaff;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+    .remove-cart-btn {
+      background: none;
+      border: none;
+      color: #ff4d4f;
+      font-size: 1.3rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+      transition: color 0.2s;
+    }
+    .remove-cart-btn:hover {
+      color: #ff7875;
+    }
+    .cart-modal-footer {
+      margin-top: auto;
+      text-align: right;
+      padding-top: 0.7rem;
+      border-top: 1px solid #23273a;
+    }
+    .checkout-btn {
+      background: linear-gradient(90deg, #00eaff 0%, #0072ff 100%);
+      color: #10131a;
+      border: none;
+      border-radius: 30px;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    @media (max-width: 900px) {
+      .shop-main { padding: 1.2rem 0.2rem 1.2rem 0.2rem; }
+      .shop-header { padding: 0.7rem 1rem; }
+      .shop-search-filter { padding: 1rem 0.7rem; }
+      .filter-row { flex-direction: column; align-items: stretch; gap: 1rem; }
+    }
+    @media (max-width: 600px) {
+      .shop-header { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+      .cart-modal { width: 100vw; max-width: 100vw; }
+      .shop-products { gap: 1.1rem; }
+      .shop-product-card { padding: 1rem 0.5rem 0.8rem 0.5rem; }
+      .shop-search-filter { padding: 0.7rem 0.2rem; }
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body class="shop-body">
+  <a href="#mainContent" class="skip-link" style="position:absolute;left:-999px;top:0;background:#00eaff;color:#10131a;padding:0.7rem 1.5rem;z-index:3001;border-radius:0 0 12px 12px;font-weight:700;transition:left 0.2s;">Skip to main content</a>
+  <header class="shop-header">
+    <div class="shop-logo">Geleee Store</div>
+    <div class="shop-header-actions">
+      <button class="cart-btn" id="cartBtn" aria-label="Buka keranjang belanja">
+        <span class="cart-icon">🛒</span>
+        <span id="cartCount">0</span>
+      </button>
+      <button class="login-btn" id="shopLoginBtn">Login</button>
+      <button class="logout-btn" id="logoutBtn" style="display:none;">Logout</button>
+    </div>
+  </header>
+  <main class="shop-main" id="mainContent" tabindex="-1">
+    <section class="shop-search-filter">
+      <div class="input-group" style="width:100%;max-width:none;">
+        <input type="text" id="searchInput" placeholder="Cari produk..." aria-label="Cari produk" style="width:100%;min-width:0;">
+        <button id="searchBtn" title="Cari" aria-label="Cari produk"><span>&#128269;</span></button>
+      </div>
+      <div class="filter-row">
+        <select id="priceFilter">
+          <option value="all">Semua Harga</option>
+          <option value="0-1000000">Di bawah Rp 1.000.000</option>
+          <option value="1000000-1300000">Rp 1.000.000 - Rp 1.300.000</option>
+          <option value="1300000-2000000">Di atas Rp 1.300.000</option>
+        </select>
+        <select id="brandFilter">
+          <option value="all">Semua Brand</option>
+          <option value="Akrapovic">Akrapovic</option>
+          <option value="Yoshimura">Yoshimura</option>
+          <option value="Racing">Racing</option>
+          <option value="Proliner">Proliner</option>
+          <option value="Nob1">Nob1</option>
+          <option value="SCMS">SCMS</option>
+        </select>
+        <select id="sortFilter">
+          <option value="name">Nama A-Z</option>
+          <option value="name-desc">Nama Z-A</option>
+          <option value="price-low">Harga Termurah</option>
+          <option value="price-high">Harga Termahal</option>
+        </select>
+        <button id="clearFilters">Reset</button>
+      </div>
+    </section>
+    <div class="results-info" id="resultsInfo">
+      <span id="resultsCount">6 produk ditemukan</span>
+    </div>
+    <section class="shop-products" id="productGrid">
+      <!-- Produk akan di-generate oleh JS -->
+    </section>
+    <div id="infiniteScrollSentinel" style="height:1px;"></div>
+  </main>
+  <!-- Cart Sidebar Modal -->
+  <aside class="cart-modal" id="cartModal" role="dialog" aria-modal="true" aria-label="Keranjang belanja">
+    <div class="cart-modal-content">
+      <div class="cart-modal-header">
+        <h2>Keranjang</h2>
+        <span class="close-cart" id="closeCart">&times;</span>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <!-- Item cart akan diisi JS -->
+      </div>
+      <div class="cart-modal-footer">
+        <button class="checkout-btn" disabled>Checkout (Coming Soon)</button>
+      </div>
+    </div>
+  </aside>
+  <button id="scrollToTopBtn" aria-label="Kembali ke atas" style="display:none;position:fixed;right:2rem;bottom:2.5rem;z-index:2003;background:linear-gradient(90deg,#00eaff,#0072ff);color:#10131a;border:none;border-radius:50%;width:48px;height:48px;box-shadow:0 4px 24px 0 rgba(0,114,255,0.18);font-size:2rem;cursor:pointer;align-items:center;justify-content:center;transition:opacity 0.3s,visibility 0.3s;"><span style="display:inline-block;transform:translateY(2px);">&#8679;</span></button>
+  <footer class="footer">
+    <div style="max-width:1200px;margin:0 auto;padding:1.5rem 1rem 1rem 1rem;text-align:center;">
+      <div style="font-size:1.1rem;margin-bottom:0.5rem;">&copy; 2025 Geleee Store. All rights reserved.</div>
+    </div>
+  </footer>
+  <div id="toast" class="notification" role="status" aria-live="polite" style="display:none;position:fixed;top:2.5rem;left:50%;transform:translateX(-50%);z-index:3000;"></div>
+  <!-- Firebase App (core) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <!-- Firebase Auth -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <!-- Firebase Firestore (jika perlu) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC6j81FLNvbvUdksxikpIFEGeX8B4TGCDA",
+      authDomain: "geleee-store.firebaseapp.com",
+      databaseURL: "https://geleee-store-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "geleee-store",
+      storageBucket: "geleee-store.appspot.com",
+      messagingSenderId: "310128144220",
+      appId: "1:310128144220:web:dd9fa14dddf092f7f29b99",
+      measurementId: "G-9LRG6B9GDV"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <!-- Script logic yang akses firebase, auth, dsb -->
+  <script>
+    // --- AUTH BUTTONS LOGIC (Firebase) ---
+    const shopLoginBtn = document.getElementById('shopLoginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        shopLoginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+      } else {
+        shopLoginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+      }
+    });
+    logoutBtn.onclick = async function() {
+      await firebase.auth().signOut();
+      window.location.href = 'index.html';
+    };
+  </script>
+  <script>
+    // Data produk
+    const products = [
+      { id: 1, name: 'Knalpot Akrapovic Carbon', price: 1200000, brand: 'Akrapovic', img: 'images/Knalpot-Akrapovic-Carbon.jpeg', rating: 5 },
+      { id: 2, name: 'Knalpot Yoshimura GP', price: 950000, brand: 'Yoshimura', img: 'images/Knalpot-Yoshimura.jpeg', rating: 4 },
+      { id: 3, name: 'Knalpot Racing R9', price: 1350000, brand: 'Racing', img: 'images/Knalpot-Racing-R9.jpg', rating: 4 },
+      { id: 4, name: 'Knalpot Proliner SS', price: 1100000, brand: 'Proliner', img: 'images/Knalpot-Proliner-SS.jpg', rating: 3 },
+      { id: 5, name: 'Knalpot Nob1 GTR', price: 1050000, brand: 'Nob1', img: 'images/Knalpot-Nob1-GTR.jpg', rating: 3 },
+      { id: 6, name: 'Knalpot SCMS Venom', price: 900000, brand: 'SCMS', img: 'images/Knalpot-SCMS-Venom.webp', rating: 2 },
+    ];
+    let cart = [];
+    function formatRupiah(num) {
+      return 'Rp ' + num.toLocaleString('id-ID');
+    }
+    // Infinite scroll config
+    const PRODUCTS_PER_BATCH = 8;
+    let filteredProducts = [];
+    let currentBatch = 0;
+    let isLoading = false;
+    const productGrid = document.getElementById('productGrid');
+    const sentinel = document.getElementById('infiniteScrollSentinel');
+    // Skeleton loader
+    function renderProductSkeleton(count) {
+      let skeleton = '';
+      for (let i = 0; i < count; i++) {
+        skeleton += `<div class="shop-product-card visible" style="min-height:340px;animation:none;background:#23273a;">
+          <div style="width:120px;height:120px;background:#23273a;border-radius:14px;margin-bottom:1.1rem;animation:pulse 1.2s infinite alternate;"></div>
+          <div style="height:1.2em;width:70%;background:#23273a;border-radius:6px;margin-bottom:0.5rem;animation:pulse 1.2s infinite alternate;"></div>
+          <div style="height:1em;width:40%;background:#23273a;border-radius:6px;margin-bottom:1.1rem;animation:pulse 1.2s infinite alternate;"></div>
+          <div style="height:2.2em;width:60%;background:#23273a;border-radius:10px;animation:pulse 1.2s infinite alternate;"></div>
+        </div>`;
+      }
+      productGrid.insertAdjacentHTML('beforeend', skeleton);
+    }
+    // Pulse animation
+    const style = document.createElement('style');
+    style.innerHTML = `@keyframes pulse {0%{opacity:0.6;}100%{opacity:1;}}`;
+    document.head.appendChild(style);
+    // Render batch
+    function renderProductBatch() {
+      if (isLoading) return;
+      isLoading = true;
+      renderProductSkeleton(PRODUCTS_PER_BATCH);
+      setTimeout(() => {
+        // Remove skeletons
+        const skeletons = productGrid.querySelectorAll('.shop-product-card[style*="animation:none"]');
+        skeletons.forEach(s => s.remove());
+        // Render real products
+        const start = currentBatch * PRODUCTS_PER_BATCH;
+        const end = start + PRODUCTS_PER_BATCH;
+        const batch = filteredProducts.slice(start, end);
+        batch.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'shop-product-card visible';
+          let stars = '';
+          for (let i = 1; i <= 5; i++) {
+            stars += i <= p.rating ? '<span style="color:#FFD600;font-size:1.1rem;">&#9733;</span>' : '<span style="color:#888;font-size:1.1rem;">&#9733;</span>';
+          }
+          card.innerHTML = `
+            <div style="margin-bottom:0.3rem;">${stars}</div>
+            <div class="shop-product-img">${p.img ? `<img src="${p.img}" alt="${p.name}" />` : ''}</div>
+            <div class="shop-product-name">${p.name}</div>
+            <div class="shop-product-price">${formatRupiah(p.price)}</div>
+            <button class="add-cart-btn" data-id="${p.id}" aria-label="Tambah ${p.name} ke keranjang" ${cart.find(item => item.id === p.id) ? 'disabled' : ''}>Tambah ke Keranjang</button>
+          `;
+          card.style.cursor = 'pointer';
+          card.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('add-cart-btn')) {
+              window.location.href = `product.html?id=${p.id}`;
+            }
+          });
+          productGrid.appendChild(card);
+        });
+        isLoading = false;
+        currentBatch++;
+        // Update results count
+        document.getElementById('resultsCount').textContent = `${filteredProducts.length} produk ditemukan`;
+      }, 500);
+    }
+    // Filter, sort, search logic
+    function getFilteredProducts() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const price = document.getElementById('priceFilter').value;
+      const brand = document.getElementById('brandFilter').value;
+      const sort = document.getElementById('sortFilter').value;
+      let filtered = products.filter(p => {
+        let match = p.name.toLowerCase().includes(search);
+        if (price !== 'all') {
+          const [min, max] = price.split('-').map(Number);
+          if (max) match = match && p.price >= min && p.price <= max;
+          else match = match && p.price > min;
+        }
+        if (brand !== 'all') match = match && p.brand === brand;
+        return match;
+      });
+      // Sort
+      filtered.sort((a, b) => {
+        if (sort === 'name') return a.name.localeCompare(b.name);
+        if (sort === 'name-desc') return b.name.localeCompare(a.name);
+        if (sort === 'price-low') return a.price - b.price;
+        if (sort === 'price-high') return b.price - a.price;
+        return 0;
+      });
+      return filtered;
+    }
+    // Reset and render first batch
+    function resetAndRenderProducts() {
+      filteredProducts = getFilteredProducts();
+      productGrid.innerHTML = '';
+      currentBatch = 0;
+      if (filteredProducts.length === 0) {
+        document.getElementById('resultsCount').textContent = '0 produk ditemukan';
+        return;
+      }
+      renderProductBatch();
+    }
+    // Infinite scroll observer
+    const observer = new window.IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !isLoading) {
+        if (currentBatch * PRODUCTS_PER_BATCH < filteredProducts.length) {
+          renderProductBatch();
+        }
+      }
+    }, { root: null, threshold: 0.1 });
+    observer.observe(sentinel);
+    // Event listeners
+    document.getElementById('searchInput').addEventListener('input', resetAndRenderProducts);
+    document.getElementById('searchBtn').addEventListener('click', resetAndRenderProducts);
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') resetAndRenderProducts();
+    });
+    document.getElementById('priceFilter').addEventListener('change', resetAndRenderProducts);
+    document.getElementById('brandFilter').addEventListener('change', resetAndRenderProducts);
+    document.getElementById('sortFilter').addEventListener('change', resetAndRenderProducts);
+    document.getElementById('clearFilters').addEventListener('click', function() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('priceFilter').value = 'all';
+      document.getElementById('brandFilter').value = 'all';
+      document.getElementById('sortFilter').value = 'name';
+      resetAndRenderProducts();
+    });
+    // Tambahkan toast notification reusable
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'notification notification-' + type;
+      toast.style.display = 'flex';
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.style.display = 'none', 400);
+      }, 2000);
+    }
+    // Cart logic with localStorage
+    function getCart() {
+      try {
+        return JSON.parse(localStorage.getItem('geleee_cart') || '[]');
+      } catch { return []; }
+    }
+    function setCart(cart) {
+      localStorage.setItem('geleee_cart', JSON.stringify(cart));
+    }
+    function updateCartCount() {
+      const cart = getCart();
+      document.getElementById('cartCount').textContent = cart.length;
+    }
+    function renderCart() {
+      const cart = getCart();
+      const cartItems = document.getElementById('cartItems');
+      let sum = 0;
+      cartItems.innerHTML = '';
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="color:#b0b8c1;text-align:center;">Keranjang kosong.</p>';
+      } else {
+        cart.forEach(item => {
+          sum += item.price;
+          const div = document.createElement('div');
+          div.className = 'cart-item';
+          div.innerHTML = `
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${formatRupiah(item.price)}</div>
+            </div>
+            <button class="remove-cart-btn" data-id="${item.id}" title="Hapus">&times;</button>
+          `;
+          cartItems.appendChild(div);
+        });
+      }
+      updateCartCount();
+    }
+    // Ganti logic add to cart agar update localStorage dan toast
+    productGrid.addEventListener('click', function(e) {
+      if (e.target.classList.contains('add-cart-btn')) {
+        const id = +e.target.getAttribute('data-id');
+        const prod = products.find(p => p.id === id);
+        let cart = getCart();
+        if (prod && !cart.find(item => item.id === id)) {
+          cart.push(prod);
+          setCart(cart);
+          updateCartCount();
+          showToast('Produk ditambahkan ke keranjang!', 'success');
+          resetAndRenderProducts();
+          renderCart();
+        } else {
+          showToast('Produk sudah ada di keranjang.', 'info');
+        }
+      }
+    });
+    // Ganti logic remove from cart agar update localStorage dan toast
+    document.getElementById('cartItems').addEventListener('click', function(e) {
+      if (e.target.classList.contains('remove-cart-btn')) {
+        const id = +e.target.getAttribute('data-id');
+        let cart = getCart();
+        cart = cart.filter(item => item.id !== id);
+        setCart(cart);
+        updateCartCount();
+        showToast('Produk dihapus dari keranjang.', 'success');
+        resetAndRenderProducts();
+        renderCart();
+      }
+    });
+    document.getElementById('cartBtn').addEventListener('click', function() {
+      document.getElementById('cartModal').classList.add('show');
+      renderCart();
+    });
+    document.getElementById('closeCart').addEventListener('click', function() {
+      document.getElementById('cartModal').classList.remove('show');
+    });
+    window.addEventListener('click', function(e) {
+      if (e.target === document.getElementById('cartModal')) {
+        document.getElementById('cartModal').classList.remove('show');
+      }
+    });
+    // Init
+    resetAndRenderProducts();
+    updateCartCount();
+    renderCart();
+    // Scroll to top button logic
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 300) {
+        scrollToTopBtn.style.display = 'flex';
+        scrollToTopBtn.style.opacity = 1;
+        scrollToTopBtn.style.visibility = 'visible';
+      } else {
+        scrollToTopBtn.style.opacity = 0;
+        scrollToTopBtn.style.visibility = 'hidden';
+        setTimeout(() => { if (window.scrollY <= 300) scrollToTopBtn.style.display = 'none'; }, 300);
+      }
+    });
+    scrollToTopBtn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    // Modal esc close
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.getElementById('cartModal').classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html> 
