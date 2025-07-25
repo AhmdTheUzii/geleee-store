@@ -88,6 +88,11 @@ Landing page dan halaman produk untuk toko knalpot motor, dengan fitur review pr
 - Notifikasi real-time (Firestore listener)
 - Responsive improvement & dark mode
 
+---
+
+## 📞 Kontak & Kontribusi
+- Project ini open source, silakan fork & kembangkan!
+- Untuk pertanyaan, hubungi: [your-email@example.com]
 
 ---
 

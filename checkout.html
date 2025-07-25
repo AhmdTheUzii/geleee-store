@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Geleee Store</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #10131a; color: #f3f4f6; font-family: 'Inter', 'Poppins', 'Raleway', Arial, sans-serif; min-height: 100vh; margin: 0; }
+    .checkout-container { max-width: 600px; margin: 3rem auto 2rem auto; background: #181c25; border-radius: 18px; box-shadow: 0 4px 32px 0 rgba(0,0,0,0.18); padding: 2.5rem 2rem; }
+    .checkout-title { font-size: 2rem; font-weight: 700; color: #00eaff; margin-bottom: 1.2rem; }
+    .checkout-section { margin-bottom: 2rem; }
+    .checkout-label { font-weight: 600; color: #fff; margin-bottom: 0.5rem; display: block; }
+    .checkout-input, .checkout-textarea { width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #3a3f4a; background: #23273a; color: #f3f4f6; font-size: 1rem; margin-bottom: 1rem; }
+    .checkout-input:focus, .checkout-textarea:focus { outline: none; border-color: #00eaff; }
+    .checkout-btn { background: linear-gradient(90deg, #00eaff 0%, #0072ff 100%); color: #10131a; border: none; border-radius: 30px; padding: 0.9rem 2.2rem; font-size: 1.15rem; font-weight: 700; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .checkout-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .checkout-btn:hover:not(:disabled) { background: linear-gradient(90deg, #0072ff 0%, #00eaff 100%); color: #fff; }
+    .payment-info { background: #23273a; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; }
+    .payment-info strong { color: #00eaff; }
+    .cart-list { background: #23273a; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; }
+    .cart-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .cart-item img { width: 54px; height: 54px; border-radius: 8px; object-fit: cover; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-weight: 600; color: #fff; }
+    .cart-item-price { color: #00eaff; font-size: 1.1rem; }
+    .contact-info { margin-top: 1.5rem; }
+    .contact-info a { color: #00eaff; text-decoration: none; font-weight: 600; }
+    .contact-info a:hover { color: #fff; }
+    .upload-area { background: #23273a; border-radius: 10px; padding: 1rem; text-align: center; cursor: pointer; border: 2px dashed #3a3f4a; margin-bottom: 1rem; transition: border-color 0.2s; }
+    .upload-area.dragover { border-color: #00eaff; }
+    .upload-preview { margin-top: 1rem; }
+    .upload-preview img { max-width: 180px; border-radius: 8px; }
+    .success-message { color: #10b981; font-weight: 700; text-align: center; margin-top: 2rem; }
+    .back-link { color: #00eaff; text-decoration: none; font-weight: 600; display: inline-block; margin-bottom: 1.2rem; }
+    .back-link:hover { color: #fff; }
+    @media (max-width: 700px) { .checkout-container { padding: 1.2rem 0.5rem; } }
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <a href="shop.html" class="back-link">&larr; Kembali ke Shop</a>
+    <div class="checkout-title">Checkout</div>
+    <div class="checkout-section payment-info">
+      <div><strong>Pembayaran hanya via transfer ke:</strong></div>
+      <div>Bank: <strong>SeaBank</strong></div>
+      <div>No. Rekening: <strong>901891511783</strong></div>
+      <div>Atas Nama: <strong>Muhammad Rakhi Albima</strong></div>
+      <div style="margin-top:0.7rem;font-size:0.98rem;color:#b0b8c1;">*Transfer hanya ke rekening atas nama <strong>"Muhammad Rakhi Albima"</strong>.<br>*Wajib sertakan bukti transfer.</div>
+    </div>
+    <div class="checkout-section cart-list" id="cartList"></div>
+    <form id="checkoutForm" enctype="multipart/form-data" autocomplete="off">
+      <div class="checkout-section">
+        <label class="checkout-label" for="buyerName">Nama Lengkap</label>
+        <input class="checkout-input" type="text" id="buyerName" name="buyerName" required autocomplete="name">
+        <label class="checkout-label" for="buyerPhone">No. WhatsApp</label>
+        <input class="checkout-input" type="tel" id="buyerPhone" name="buyerPhone" required autocomplete="tel">
+        <label class="checkout-label" for="buyerAddress">Alamat Pengiriman</label>
+        <textarea class="checkout-textarea" id="buyerAddress" name="buyerAddress" rows="3" required></textarea>
+      </div>
+      <div class="checkout-section">
+        <label class="checkout-label">Upload Bukti Transfer *</label>
+        <div class="upload-area" id="uploadArea">Klik untuk upload atau drag & drop gambar bukti transfer</div>
+        <input type="file" id="proofInput" name="proof" accept="image/*" style="display:none;" required>
+        <div class="upload-preview" id="uploadPreview"></div>
+      </div>
+      <button class="checkout-btn" type="submit" id="submitBtn">Kirim Bukti & Checkout</button>
+    </form>
+    <div class="contact-info">
+      <div>Butuh bantuan? Hubungi kami:</div>
+      <div>Instagram: <a href="https://instagram.com/Geleee_Store" target="_blank">@Geleee_Store</a></div>
+      <div>WhatsApp: <a href="https://wa.me/6281290210394" target="_blank">081290210394</a></div>
+    </div>
+    <div class="success-message" id="successMessage" style="display:none;"></div>
+  </div>
+  <script>
+    // Ambil cart dari localStorage
+    function getCart() {
+      try { return JSON.parse(localStorage.getItem('geleee_cart') || '[]'); } catch { return []; }
+    }
+    function formatRupiah(num) {
+      return 'Rp ' + num.toLocaleString('id-ID');
+    }
+    function renderCart() {
+      const cart = getCart();
+      const cartList = document.getElementById('cartList');
+      if (!cart.length) {
+        cartList.innerHTML = '<div style="color:#ff4d4f;text-align:center;">Keranjang kosong. <a href="shop.html" style="color:#00eaff;">Belanja dulu</a></div>';
+        document.getElementById('checkoutForm').style.display = 'none';
+        return;
+      }
+      let total = 0;
+      cartList.innerHTML = cart.map(item => {
+        total += item.price;
+        return `<div class="cart-item"><img src="${item.img || 'images/blackstyle.jpg'}" alt="${item.name}" onerror="this.onerror=null;this.src='images/blackstyle.jpg';"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">${formatRupiah(item.price)}</div></div></div>`;
+      }).join('') + `<div style="text-align:right;font-weight:700;color:#00eaff;font-size:1.2rem;">Total: ${formatRupiah(total)}</div>`;
+      document.getElementById('checkoutForm').style.display = '';
+    }
+    renderCart();
+    // Upload bukti transfer
+    const uploadArea = document.getElementById('uploadArea');
+    const proofInput = document.getElementById('proofInput');
+    const uploadPreview = document.getElementById('uploadPreview');
+    let proofFile = null;
+    uploadArea.addEventListener('click', () => proofInput.click());
+    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+    uploadArea.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      handleProofFile(file);
+    });
+    proofInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      handleProofFile(file);
+    });
+    function handleProofFile(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('File harus berupa gambar', 'error');
+        proofInput.value = '';
+        return;
+      }
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Ukuran gambar max 2MB', 'error');
+        proofInput.value = '';
+        return;
+      }
+      proofFile = file;
+      const reader = new FileReader();
+      reader.onload = e => {
+        uploadPreview.innerHTML = `<img src="${e.target.result}" alt="Bukti Transfer">`;
+      };
+      reader.readAsDataURL(file);
+    }
+    // Form submit
+    document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('buyerName').value.trim();
+      const phone = document.getElementById('buyerPhone').value.trim();
+      const address = document.getElementById('buyerAddress').value.trim();
+      if (!name || !phone || !address || !proofFile) {
+        showToast('Mohon lengkapi semua data dan upload bukti transfer', 'error');
+        return;
+      }
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('submitBtn').textContent = 'Memproses...';
+      // Simulasi upload dan simpan data (bisa diintegrasi ke Firestore jika mau)
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      document.getElementById('successMessage').style.display = 'block';
+      document.getElementById('successMessage').textContent = 'Checkout berhasil! Pesanan Anda akan segera diproses. Terima kasih.';
+      document.getElementById('checkoutForm').reset();
+      uploadPreview.innerHTML = '';
+      proofFile = null;
+      localStorage.removeItem('geleee_cart');
+      renderCart();
+    });
+    // Toast notification
+    function showToast(msg, type = 'success') {
+      const toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;padding:1rem 1.5rem;border-radius:12px;color:white;font-weight:600;max-width:300px;transform:translateX(100%);transition:transform 0.3s ease;';
+      toast.style.background = type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #ef4444, #dc2626)';
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.style.transform = 'translateX(0)', 10);
+      setTimeout(() => toast.style.transform = 'translateX(100%)', 3000);
+      setTimeout(() => document.body.removeChild(toast), 3300);
+    }
+  </script>
+</body>
+</html> 

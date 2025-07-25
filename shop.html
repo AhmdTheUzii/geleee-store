@@ -355,8 +355,7 @@
       padding: 0.7rem 1.5rem;
       font-size: 1rem;
       font-weight: 700;
-      cursor: not-allowed;
-      opacity: 0.7;
+      cursor: pointer;
     }
     @media (max-width: 900px) {
       .shop-main { padding: 1.2rem 0.2rem 1.2rem 0.2rem; }
@@ -440,7 +439,7 @@
         <!-- Item cart akan diisi JS -->
       </div>
       <div class="cart-modal-footer">
-        <button class="checkout-btn" disabled>Checkout (Coming Soon)</button>
+        <button class="checkout-btn" id="checkoutCartBtn" disabled>Checkout (Coming Soon)</button>
       </div>
     </div>
   </aside>
@@ -664,8 +663,13 @@
       const cartItems = document.getElementById('cartItems');
       let sum = 0;
       cartItems.innerHTML = '';
+      const checkoutBtn = document.getElementById('checkoutCartBtn');
       if (cart.length === 0) {
         cartItems.innerHTML = '<p style="color:#b0b8c1;text-align:center;">Keranjang kosong.</p>';
+        if (checkoutBtn) {
+          checkoutBtn.disabled = true;
+          checkoutBtn.textContent = 'Checkout';
+        }
       } else {
         cart.forEach(item => {
           sum += item.price;
@@ -680,6 +684,10 @@
           `;
           cartItems.appendChild(div);
         });
+        if (checkoutBtn) {
+          checkoutBtn.disabled = false;
+          checkoutBtn.textContent = 'Checkout';
+        }
       }
       updateCartCount();
     }
@@ -750,6 +758,18 @@
     window.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         document.getElementById('cartModal').classList.remove('show');
+      }
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkoutBtn = document.getElementById('checkoutCartBtn');
+      if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function() {
+          if (!checkoutBtn.disabled) {
+            window.location.href = 'checkout.html';
+          }
+        });
       }
     });
   </script>
