@@ -1,99 +1,208 @@
-# Geleee Store - Landing Page & Product Review
+# 🏁 Geleee Store - WRC Exhaust Ordering Service
 
-Landing page dan halaman produk untuk toko knalpot motor, dengan fitur review produk, login/register via Firebase, dan komentar persistent menggunakan Firestore.
+Website e-commerce untuk pemesanan knalpot racing WRC dengan sistem pembayaran transfer bank. Dibangun dengan HTML, CSS, JavaScript, dan Firebase untuk autentikasi dan database.
 
----
+## 📋 Deskripsi
+
+Geleee Store adalah platform pemesanan online khusus untuk produk knalpot racing WRC. Website ini menyediakan katalog produk lengkap, sistem keranjang belanja, dan proses checkout yang mudah dengan pembayaran via transfer bank.
 
 ## ✨ Fitur Utama
-- **Landing Page Modern**: Desain responsif, clean, dan profesional.
-- **Halaman Produk Detail**: Galeri gambar, deskripsi, harga, stok, dan review.
-- **Review & Komentar Produk**:
-  - User bisa menulis review (rating, komentar, upload foto, dsb).
-  - Komentar/review langsung tersimpan di Firestore (bukan hanya lokal).
-  - Komentar bisa di-filter, sort, dan like.
-  - Hanya user login yang bisa menulis review.
-  - User bisa edit & hapus komentarnya sendiri.
-- **Login/Register**: Menggunakan Firebase Authentication (email & password).
-- **Persistent Data**: Semua komentar/review tetap ada meski di-refresh atau deploy ulang.
-- **Keranjang Belanja**: Simpan produk ke keranjang (localStorage).
 
----
+### 🛍️ E-commerce
+- **Katalog Produk**: Tampilan produk dengan gambar, harga, dan rating
+- **Sistem Keranjang**: Tambah/hapus produk dengan localStorage
+- **Checkout**: Form pemesanan dengan upload bukti transfer
+- **Filter & Search**: Pencarian dan filter berdasarkan harga, brand, dll
 
-## 🗂️ Struktur File
+### 🔐 Autentikasi
+- **Login/Register**: Sistem autentikasi dengan Firebase Auth
+- **Dashboard**: Panel admin untuk manajemen pesanan
+- **Session Management**: Manajemen sesi user yang aman
+
+### 💬 Review & Rating
+- **Sistem Review**: User dapat memberikan rating dan review produk
+- **Upload Foto**: Upload foto review dengan preview
+- **Filter Review**: Filter berdasarkan rating dan tipe review
+
+### 💳 Pembayaran
+- **Transfer Bank**: Pembayaran via transfer SeaBank
+- **Upload Bukti**: Upload bukti transfer dengan validasi
+- **Konfirmasi**: Sistem konfirmasi pembayaran
+
+## 🛠️ Teknologi yang Digunakan
+
+### Frontend
+- **HTML5**: Struktur website yang semantic
+- **CSS3**: Styling modern dengan gradient dan animasi
+- **JavaScript (ES6+)**: Interaktivitas dan logika aplikasi
+- **Responsive Design**: Mobile-first approach
+
+### Backend & Database
+- **Firebase Authentication**: Sistem login/register
+- **Firebase Firestore**: Database untuk review dan data user
+- **LocalStorage**: Penyimpanan keranjang belanja
+
+### External Libraries
+- **Google Fonts**: Inter, Poppins, Raleway
+- **Firebase SDK**: Untuk integrasi Firebase
+
+## 📁 Struktur File
 
 ```
-├── index.html           # Landing page utama
-├── shop.html            # Halaman katalog produk
-├── product.html         # Halaman detail produk + review
-├── dashboard.html       # (Opsional) Halaman admin/dashboard
-├── style.css            # Semua styling utama
-├── script.js            # (Jika ada, untuk logic tambahan)
-├── images/              # Folder gambar produk
-├── ...
+wrc-landing/
+├── index.html              # Halaman utama/landing
+├── shop.html               # Halaman katalog produk
+├── product.html            # Detail produk & review
+├── checkout.html           # Halaman checkout
+├── dashboard.html          # Panel admin
+├── 404.html               # Halaman error
+├── style.css              # Stylesheet utama
+├── script.js              # JavaScript utama
+├── README.md              # Dokumentasi
+├── racing-car.svg         # Icon racing
+├── Dashhorizon-eZ5wg.otf  # Font custom
+└── images/                # Folder gambar produk
+    ├── bc02-sundblue.jpg
+    ├── ss02-sundblue.jpg
+    ├── kawa-style-sundblue .jpg
+    ├── varky-v2-sundblue.jpg
+    ├── ss02-stainless.jpg
+    ├── kajaz-style-stainless.jpg
+    ├── ss02-bluecoating.jpg
+    ├── blackstyle.jpg
+    └── std-racing.jpg
 ```
 
----
+## 🚀 Cara Setup & Install
 
-## ⚙️ Cara Setup & Jalankan Lokal
+### Prerequisites
+- Web browser modern (Chrome, Firefox, Safari, Edge)
+- Koneksi internet untuk Firebase
+- Live server (untuk development)
 
-1. **Clone repo ini**
-2. Pastikan sudah punya Node.js (untuk live-server, opsional)
-3. Jalankan di lokal (opsi):
+### Installation
+
+1. **Clone Repository**
    ```bash
-   npx live-server --port=5500
-   # atau buka index.html langsung di browser
+   git clone https://github.com/AhmdTheUzii/geleee-store.git
+   cd geleee-store
    ```
-4. **Konfigurasi Firebase**
-   - Sudah include di `<script>` pada setiap file HTML (lihat bagian `<head>` di product.html)
-   - Ganti config Firebase jika pakai project sendiri
+
+2. **Setup Firebase** (Opsional - untuk fitur login/review)
+   - Buat project di [Firebase Console](https://console.firebase.google.com/)
+   - Aktifkan Authentication dan Firestore
+   - Update konfigurasi Firebase di file HTML
+
+3. **Jalankan Website**
+   ```bash
+   # Menggunakan live-server
+   npx live-server --port=5500
+   
+   # Atau buka file index.html langsung di browser
+   ```
+
+4. **Akses Website**
+   - Buka browser dan akses `http://localhost:5500`
+   - Website siap digunakan!
+
+## 🎯 Cara Penggunaan
+
+### Untuk Customer
+1. **Browse Produk**: Lihat katalog di halaman Shop
+2. **Tambah ke Keranjang**: Klik "Tambah ke Keranjang"
+3. **Checkout**: Klik icon keranjang → "Checkout"
+4. **Isi Form**: Lengkapi data pemesanan
+5. **Upload Bukti Transfer**: Upload bukti pembayaran
+6. **Konfirmasi**: Tunggu konfirmasi dari admin
+
+### Untuk Admin
+1. **Login**: Akses dashboard dengan akun admin
+2. **Kelola Pesanan**: Lihat dan update status pesanan
+3. **Kelola Produk**: Tambah/edit/hapus produk
+4. **Kelola Review**: Moderasi review customer
+
+## 💰 Informasi Pembayaran
+
+### Rekening Transfer
+- **Bank**: SeaBank
+- **No. Rekening**: 901891511783
+- **Atas Nama**: Muhammad Rakhi Albima
+
+### Ketentuan
+- Transfer hanya ke rekening atas nama "Muhammad Rakhi Albima"
+- Wajib sertakan bukti transfer
+- Konfirmasi pembayaran maksimal 1x24 jam
+
+## 📞 Kontak & Support
+
+### Social Media
+- **Instagram**: [@Geleee_Store](https://instagram.com/Geleee_Store)
+- **WhatsApp**: [081290210394](https://wa.me/6281290210394)
+
+### Technical Support
+- **Email**: support@geleee-store.com
+- **GitHub Issues**: [Report Bug](https://github.com/AhmdTheUzii/geleee-store/issues)
+
+## 🔧 Development
+
+### Menambah Produk Baru
+1. Edit array `products` di `shop.html`
+2. Tambahkan gambar ke folder `images/`
+3. Update data produk sesuai format
+
+### Customisasi Style
+- Edit file `style.css` untuk mengubah tampilan
+- Gunakan CSS variables untuk konsistensi warna
+- Responsive design sudah dioptimasi
+
+### Firebase Integration
+- Update `firebaseConfig` di file HTML
+- Setup Firestore rules untuk keamanan
+- Konfigurasi Authentication providers
+
+## 🐛 Troubleshooting
+
+### Masalah Umum
+1. **Gambar tidak muncul**: Pastikan path file benar
+2. **Firebase error**: Cek konfigurasi dan koneksi internet
+3. **LocalStorage error**: Clear browser cache
+4. **Upload gagal**: Cek ukuran file (max 2MB)
+
+### Debug Mode
+- Buka Developer Tools (F12)
+- Cek Console untuk error messages
+- Network tab untuk masalah loading
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📈 Roadmap
+
+### Versi Selanjutnya
+- [ ] Sistem notifikasi real-time
+- [ ] Integrasi payment gateway
+- [ ] Mobile app (React Native)
+- [ ] Analytics dashboard
+- [ ] Multi-language support
+- [ ] Advanced search filters
+
+### Performance Optimization
+- [ ] Image optimization
+- [ ] Lazy loading
+- [ ] Service Worker for PWA
+- [ ] CDN integration
 
 ---
 
-## ☁️ Cara Deploy ke Vercel
+**Dibuat dengan ❤️ oleh Geleee Store Team**
 
-1. **Push semua file ke GitHub**
-2. **Login ke [vercel.com](https://vercel.com/)**
-3. **Import project dari GitHub**
-4. **Build Command:** *(kosongkan)*
-5. **Output Directory:** `.` (titik, jika semua file di root)
-6. **Environment Variables:** *(tidak perlu, kecuali ingin menyembunyikan config)*
-7. **Deploy!**
-8. Setelah deploy, cek domain vercel kamu. Semua fitur Firebase tetap berjalan.
-
----
-
-## 🔒 Catatan Penting
-- **API Key Firebase** tetap aman untuk frontend (tidak bisa akses data sensitif tanpa rules yang benar).
-- **Authorized Domains:** Setelah deploy, tambahkan domain vercel kamu di Firebase Console > Authentication > Authorized domains.
-- **Rules Firestore:** Pastikan rules Firestore sudah benar agar hanya user login yang bisa menulis/mengedit/menghapus komentarnya sendiri.
-- **Gambar upload**: Untuk demo, gambar review hanya disimpan sebagai data URL (base64). Untuk produksi, gunakan Firebase Storage.
-
----
-
-## 🚀 Spesifikasi Teknis
-- **Frontend:** HTML, CSS, JS vanilla (tanpa framework)
-- **Auth & Database:** Firebase Auth & Firestore
-- **Deploy:** Vercel (static hosting)
-- **Fitur CRUD Komentar:**
-  - Create: User login bisa submit review
-  - Read: Semua komentar diambil dari Firestore
-  - Update: User bisa edit komentarnya sendiri
-  - Delete: User bisa hapus komentarnya sendiri
-
----
-
-## 👨‍💻 Pengembangan Lanjutan
-- Integrasi Firebase Storage untuk upload gambar review
-- Dashboard admin untuk moderasi komentar
-- Notifikasi real-time (Firestore listener)
-- Responsive improvement & dark mode
-
----
-
-## 📞 Kontak & Kontribusi
-- Project ini open source, silakan fork & kembangkan!
-- Untuk pertanyaan, hubungi: [your-email@example.com]
-
----
-
-Selamat mencoba & semoga sukses dengan project-mu! 
+*Last updated: January 2025* 
