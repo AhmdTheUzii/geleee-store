@@ -74,6 +74,136 @@
     </div>
     <div class="success-message" id="successMessage" style="display:none;"></div>
   </div>
+  <!-- Gunakan SDK terbaru -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function(){
+    emailjs.init("hSfrxGebd1Souwi75"); // Public key EmailJS milik kamu
+  })();
+
+  // Fungsi untuk mengambil data keranjang dari localStorage
+  function getCart() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+  }
+
+  // Fungsi menghitung total harga
+  function getTotal(cart) {
+    return cart.reduce((total, item) => total + (item.price * item.qty), 0);
+  }
+
+  // Fungsi untuk format orders menjadi string HTML untuk email
+  function formatOrdersForEmail(cart) {
+    let orderList = '';
+    cart.forEach((item, index) => {
+      orderList += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${item.name}</td>
+          <td>${item.qty}</td>
+          <td>Rp ${item.price.toLocaleString('id-ID')}</td>
+          <td>Rp ${(item.price * item.qty).toLocaleString('id-ID')}</td>
+        </tr>
+      `;
+    });
+    return orderList;
+  }
+
+  // Fungsi untuk format orders menjadi plain text
+  function formatOrdersPlainText(cart) {
+    let orderText = '';
+    cart.forEach((item, index) => {
+      orderText += `${index + 1}. ${item.name} - Qty: ${item.qty} - Harga: Rp ${item.price.toLocaleString('id-ID')} - Subtotal: Rp ${(item.price * item.qty).toLocaleString('id-ID')}\n`;
+    });
+    return orderText;
+  }
+
+  // Fungsi submit checkout
+  document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Ambil data dari form
+    const user_name = document.getElementById('buyerName').value;
+    const user_phone = document.getElementById('buyerPhone').value;
+    const user_address = document.getElementById('buyerAddress').value;
+    
+    // Untuk email, jika ada field email terpisah, gunakan itu. Jika tidak, bisa gunakan default atau phone
+    const user_email = document.getElementById('buyerEmail') ? 
+                      document.getElementById('buyerEmail').value : 
+                      'customer@example.com'; // atau bisa gunakan phone sebagai identifier
+
+    // Ambil data produk dari keranjang
+    const cart = getCart();
+    
+    // Validasi keranjang tidak kosong
+    if (cart.length === 0) {
+      alert('Keranjang masih kosong!');
+      return;
+    }
+
+    // Data lain
+    const order_id = "ORD" + Date.now();
+    const order_time = new Date().toLocaleString('id-ID');
+    const cost_shipping = 20000;
+    const subtotal = getTotal(cart);
+    const cost_total = subtotal + cost_shipping;
+
+    // Format orders untuk email (pilih salah satu format)
+    const orders_html = formatOrdersForEmail(cart); // Untuk template HTML
+    const orders_text = formatOrdersPlainText(cart); // Untuk template plain text
+
+    // Template parameters
+    const templateParams = {
+      user_name: user_name,
+      user_email: user_email,
+      user_phone: user_phone,
+      user_address: user_address,
+      order_id: order_id,
+      order_time: order_time,
+      orders_html: orders_html, // Untuk template HTML
+      orders_text: orders_text, // Untuk template plain text
+      subtotal: `Rp ${subtotal.toLocaleString('id-ID')}`,
+      cost_shipping: `Rp ${cost_shipping.toLocaleString('id-ID')}`,
+      cost_total: `Rp ${cost_total.toLocaleString('id-ID')}`
+    };
+
+    // Show loading
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Mengirim...';
+    submitBtn.disabled = true;
+
+    // Kirim ke EmailJS
+    emailjs.send('service_e6j111d', 'template_ervqrko', templateParams)
+      .then(function(response) {
+        console.log('SUCCESS!', response.status, response.text);
+        alert('Notifikasi pesanan berhasil dikirim ke admin!');
+        
+        // Reset form dan keranjang
+        document.getElementById('checkoutForm').reset();
+        localStorage.removeItem('cart');
+        
+        // Redirect ke halaman sukses atau reload
+        // window.location.href = 'thank-you.html';
+        location.reload();
+      })
+      .catch(function(error) {
+        console.error('FAILED...', error);
+        alert('Gagal mengirim notifikasi pesanan! Error: ' + (error.text || error.message));
+      })
+      .finally(function() {
+        // Restore button
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      });
+  });
+
+  // Optional: Load cart items untuk ditampilkan di checkout page
+  document.addEventListener('DOMContentLoaded', function() {
+    const cart = getCart();
+    // Display cart items jika ada container untuk itu
+    // displayCartItems(cart);
+  });
+</script>
   <script>
     // Ambil cart dari localStorage
     function getCart() {
@@ -135,28 +265,6 @@
       };
       reader.readAsDataURL(file);
     }
-    // Form submit
-    document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('buyerName').value.trim();
-      const phone = document.getElementById('buyerPhone').value.trim();
-      const address = document.getElementById('buyerAddress').value.trim();
-      if (!name || !phone || !address || !proofFile) {
-        showToast('Mohon lengkapi semua data dan upload bukti transfer', 'error');
-        return;
-      }
-      document.getElementById('submitBtn').disabled = true;
-      document.getElementById('submitBtn').textContent = 'Memproses...';
-      // Simulasi upload dan simpan data (bisa diintegrasi ke Firestore jika mau)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      document.getElementById('successMessage').style.display = 'block';
-      document.getElementById('successMessage').textContent = 'Checkout berhasil! Pesanan Anda akan segera diproses. Terima kasih.';
-      document.getElementById('checkoutForm').reset();
-      uploadPreview.innerHTML = '';
-      proofFile = null;
-      localStorage.removeItem('geleee_cart');
-      renderCart();
-    });
     // Toast notification
     function showToast(msg, type = 'success') {
       const toast = document.createElement('div');
